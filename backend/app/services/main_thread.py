@@ -4,6 +4,7 @@ from datetime import date, timedelta
 from sqlalchemy import select
 from app.db import async_session
 from app.models.fund_flow import SectorFundFlowDaily, StockFundFlowDaily
+from app.models.sector import Sector
 
 WEIGHTS = {"amount": 0.35, "persist": 0.25, "strength": 0.20, "accel": 0.10, "breadth": 0.10}
 
@@ -46,11 +47,18 @@ async def get_top_sectors(top_n: int = 3, window_days: int = 20):
     if score_df.empty:
         return {"window_days": window_days, "top_sectors": [], "computed_at": str(date.today())}
     top = score_df.head(top_n)
+    
+    # Look up sector names
+    codes = list(top.index)
+    async with async_session() as sess:
+        stmt = select(Sector.sector_code, Sector.sector_name).where(Sector.sector_code.in_(codes))
+        name_map = {row[0]: row[1] for row in (await sess.execute(stmt)).all()}
+    
     top_sectors = []
     for code, row in top.iterrows():
         top_sectors.append({
             "sector_code": code,
-            "sector_name": code,
+            "sector_name": name_map.get(code, code),
             "score": round(float(row["score"]), 2),
             "amount_sum": round(float(row["amount_sum"])),
             "persist_days": int(row["persist_days"]),
