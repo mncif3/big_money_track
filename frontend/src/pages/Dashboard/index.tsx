@@ -1,41 +1,31 @@
-import { useState, useEffect } from 'react';
-import { Row, Col, Card, Typography } from 'antd';
-import MainThreadCard from './MainThreadCard';
-import SectorRankingTable from './SectorRankingTable';
-import SectorTrendChart from './SectorTrendChart';
-import AlertPanel from './AlertPanel';
+import { Card, Typography, Row, Col } from 'antd'
+import MainThreadCard from './MainThreadCard'
+import SectorRankingTable from './SectorRankingTable'
+import SectorTrendChart from './SectorTrendChart'
+import AlertPanel from './AlertPanel'
 
-const { Title } = Typography;
+const { Title } = Typography
 
 export default function Dashboard() {
   return (
-    <div style={{ padding: 24, background: '#f0f2f5', minHeight: '100vh' }}>
-      <Title level={3} style={{ marginBottom: 16 }}>
-        🔥 CapFlow — 资金流向看板
-      </Title>
-
-      {/* Top: Main Thread */}
+    <div>
+      <Title level={3} style={{ color: '#e0e0e0', marginBottom: 12 }}>🔥 资金流向看板</Title>
       <MainThreadCard />
-
-      <Row gutter={16} style={{ marginTop: 16 }}>
-        {/* Left: Sector Ranking */}
+      <Row gutter={12} style={{ marginTop: 12 }}>
         <Col span={12}>
-          <Card title="📊 板块资金流入 TOP10" size="small">
+          <Card title="📊 板块资金流入 TOP10" size="small" style={{ background: '#161822', borderColor: '#2a2d3a' }}>
             <SectorRankingTable />
           </Card>
         </Col>
-        {/* Right: Trend Chart */}
         <Col span={12}>
-          <Card title="📈 主线板块资金趋势" size="small">
+          <Card title="📈 主线板块资金趋势" size="small" style={{ background: '#161822', borderColor: '#2a2d3a' }}>
             <SectorTrendChart />
           </Card>
         </Col>
       </Row>
-
-      {/* Bottom: Alerts */}
-      <Card title="⚠️ 最近预警" size="small" style={{ marginTop: 16 }}>
+      <Card title="⚠️ 最近预警" size="small" style={{ marginTop: 12, background: '#161822', borderColor: '#2a2d3a' }}>
         <AlertPanel />
       </Card>
     </div>
-  );
+  )
 }
